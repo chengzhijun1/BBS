@@ -4,16 +4,13 @@ import cn.edu.ncu.bbs.entity.Answer;
 import cn.edu.ncu.bbs.entity.CommonResult;
 import cn.edu.ncu.bbs.entity.Page;
 import cn.edu.ncu.bbs.service.AnswerService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
-@RequestMapping("/answer")
 
 public class AnswerController {
     @Resource
@@ -30,17 +27,17 @@ public class AnswerController {
      * @param answer
      * @return
      */
-    @GetMapping("/addAnswer")
+    @PostMapping("/alert/answer")
     public CommonResult addAnswer(HttpSession session, Answer answer) {
         return answerService.addAnswer(session, answer);
     }
 
     /**
-     * 默认为采纳的回答置顶，
+     * 采纳的回答置顶，
      *
      * @return
      */
-    @GetMapping("/findAnswer")
+    @GetMapping("/answer")
     public List<Answer> findAnswer(String probId) {
         return answerService.findAnswer(probId);
     }
@@ -48,16 +45,17 @@ public class AnswerController {
     /**
      * 用户对自己提出的问题的回答选择采纳
      */
-    @GetMapping("/setAccept")
+    @PatchMapping("/alert/answer/setAccept")
     public CommonResult setAccept(HttpSession session, int answerId) {
         return answerService.setAccept(session, answerId);
     }
 
     /**
-     * 用户查看自己所有有过的回答
+     * 查看用户所有有过的回答
      */
-    @GetMapping("/myAnswer")
-    public Page<Answer> getMyAnswerPage(HttpSession session,int currentPage){
-        return answerService.getMyAnswerPage(session,currentPage);
+    @GetMapping("/user/{user}/answer")
+    public Page<Answer> getUsersAnswerPage(HttpSession session,
+                                        @RequestParam(defaultValue = "1",required = false) int pageNum){
+        return answerService.getMyAnswerPage(session,pageNum);
     }
 }

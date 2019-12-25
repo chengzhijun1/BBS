@@ -5,17 +5,15 @@ import cn.edu.ncu.bbs.entity.Page;
 import cn.edu.ncu.bbs.entity.Question;
 import cn.edu.ncu.bbs.service.QuestionService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/question")
+@ResponseBody
+//@RequestMapping("/question")
 public class QuestionController {
     @Resource
     QuestionService questionService;
@@ -29,33 +27,45 @@ public class QuestionController {
      * @param question
      * @return
      */
-    @GetMapping("/addQuestion")
+    @PostMapping("/user/question")
     public CommonResult addQuestion(HttpSession session, Question question) {
         return questionService.addQuestion(session,question);
     }
 
+//    /**
+//     * 用户进入首页显示推荐的精品文章
+//      * @param keyWord
+//     * @param currentPage
+//     * @return
+//     */
+//    @GetMapping("/question")
+//    public Page<Question> getIndexQuestionPage(String keyWord, int currentPage) {
+//        return questionService.findQuestionByKeyWord(keyWord,currentPage);
+//    }
+
+    /**
+     * 主界面的问题列表，可根据orderBy参数选择以默认时间，奖励，回答数，阅读数进行排序
+     * 还可以筛选被解决、没被解决、或者所有问题，orderBy默认为0，flag默认为2
+     * @param
+     * @return
+     */
+    @GetMapping("/question")
+    public Page<Question> getPageQuestion(@RequestParam(defaultValue = "1",required = false) int pageNum,
+                                          @RequestParam(defaultValue = "0",required = false) Integer orderBy,
+                                          @RequestParam(defaultValue = "2",required = false) Integer flag) {
+        return questionService.getPageQuestion(pageNum,orderBy,flag);
+    }
 
     /**
      * 通过关键字搜索题目或者描述
      * @param keyWord
-     * @param currentPage
+     * @param pageNum
      * @return
      */
-    @GetMapping("/findQuestionByKeyWord")
-    public Page<Question> findQuestionByKeyWord(String keyWord, int currentPage) {
-        return questionService.findQuestionByKeyWord(keyWord,currentPage);
-    }
-
-
-    /**
-     * 主界面的问题列表，可根据orderBy参数选择以默认时间，奖励，回答数，阅读数进行排序
-     * 还可以筛选被解决、没被解决、或者所有问题
-     * @param
-     * @return
-     */
-    @GetMapping("/questionPage")
-    public Page<Question> getPageQuestion(int currentPage, String orderBy, String flag){
-        return questionService.getPageQuestion(currentPage,orderBy,flag);
+    @GetMapping("/search/question")
+    public Page<Question> findQuestionByKeyWord(String keyWord,
+                                                @RequestParam(defaultValue = "1",required = false) int pageNum) {
+        return questionService.findQuestionByKeyWord(keyWord,pageNum);
     }
 
 
@@ -64,7 +74,7 @@ public class QuestionController {
      * @param questionId
      * @return
      */
-    @GetMapping("/questionPage/{questionId}")
+    @GetMapping("/question/{questionId}")
     public Map<String,Object> getQuestionDetail(@PathVariable Integer questionId){
         return questionService.getQuestionDetail(questionId);
     }
@@ -72,16 +82,19 @@ public class QuestionController {
     /**
      * 用户看自己提的问题
      */
-    @GetMapping("/myQuestionList")
-    public Page<Question> getMyPageQuestion(HttpSession session, int currentPage, String orderBy, String flag){
-        return questionService.getMyPageQuestion(session,currentPage,orderBy,flag);
+    @GetMapping("/user/question")
+    public Page<Question> getUsersPageQuestion(HttpSession session,
+                                               @RequestParam(defaultValue = "1",required = false) int pageNum,
+                                               @RequestParam(defaultValue = "0",required = false) Integer orderBy,
+                                               @RequestParam(defaultValue = "2",required = false) Integer flag){
+        return questionService.getUsersPageQuestion(session,pageNum,orderBy,flag);
     }
 
 
     /**
      * 用户对自己提的问题进行修改,前端要默认传回问题原来的title、describe、ward
      */
-    @GetMapping("/alertQuestion")
+    @PatchMapping("/alert/{mao}/question")
     public CommonResult alertQuestion(HttpSession session,Question question){
         return questionService.alertQuestion(session,question);
     }
