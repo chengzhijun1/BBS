@@ -1,0 +1,51 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--colum是数据库中的名称-->
+<!--帖子和用户关联-->
+<mapper namespace="cn.edu.ncu.bbs.mapper.QuestionMapper">
+    <!-- 通过关键词查找问题   -->
+    <resultMap  id="getQuestion" type="cn.edu.ncu.bbs.entity.Question">
+        <id  property="questionId" column="question_id"/>
+        <result property="questionTitle" column="question_title" />
+        <result property="questionDescribe" column="question_describe" />
+        <result property="readNum" column="read_num"/>
+        <result property="answerNum" column="answer_num" />
+        <result property="questionWard" column="question_ward" />
+        <result property="questionTime" column="question_time"/>
+        <result property="flag" column="flag"/>
+        <association property="user" javaType="cn.edu.ncu.bbs.entity.User">
+            <id property="userId" column="user_id" />
+            <result property="username" column="username"/>
+            <result property="head" column="head"/>
+        </association>
+    </resultMap>
+    <select id="findQuestionByKeyWord" resultMap="getQuestion">
+        select question_id,question_title,read_num,answer_num,question_ward,question_time,question.flag,user.user_id,username,head
+        from question,user
+        where question.user_id = user.user_id and (question_describe like '%${keyWord}%' or question_title like '%${keyWord}%')
+        order by question_id
+        limit #{start},#{size}
+    </select>
+
+    <!-- 通过flag进行筛选，同时orderBy进行排序 -->
+    <select id="getPageQuestionByFlagOrderBy" resultMap="getQuestion">
+        select question_id,question_title,read_num,answer_num,question_ward,question_time,question.flag,user.user_id,username,head
+        from question,user
+        where question.user_id = user.user_id and question.flag != #{flag}
+        order by ${orderBy} desc
+        limit #{start},#{size}
+    </select>
+
+    <!-- 通过question_id找到提问题的用户的id、username、head  -->
+    <select id="getQuestionById" resultMap="getQuestion">
+        select question_id,question_title,question_describe,read_num,answer_num,question_ward,question_time,question.flag,user.user_id,username,head
+         from question,user
+         where question_id = #{questionId} and question.user_id = user.user_id
+    </select>
+
+    <!--  通过userId找到该用户的所有问题  -->
+<!--    <select id="getUsersPageQuestionByFlagOrderBy" resultMap="getQuestion">-->
+<!--        -->
+<!--    </select>-->
+</mapper>

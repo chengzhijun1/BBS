@@ -1,0 +1,40 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--colum是数据库中的名称-->
+<!--帖子和用户关联-->
+<mapper namespace="cn.edu.ncu.bbs.mapper.AnswerMapper">
+
+    <!-- 通过问题的id找到answer和user   -->
+    <resultMap  id="getAnswer" type="cn.edu.ncu.bbs.entity.Answer">
+        <id  property="answerId" column="answer_id"/>
+        <result property="questionId" column="question_id" />
+        <result property="userId" column="user_id" />
+        <result property="answerDescribe" column="answer_describe"/>
+        <result property="answerTime" column="answer_time" />
+        <result property="isAccept" column="is_accept" />
+        <association property="user" javaType="cn.edu.ncu.bbs.entity.User">
+            <id property="userId" column="user_id" />
+            <result property="username" column="username"/>
+            <result property="head" column="head"/>
+        </association>
+        <association property="question" javaType="cn.edu.ncu.bbs.entity.Question">
+            <id property="questionId" column="question_id" />
+            <result property="questionTitle" column="question_title" />
+        </association>
+    </resultMap>
+    <select id="getAnswerByQuestion" resultMap="getAnswer">
+        select answer_id,answer_describe,answer_time,is_accept,user.user_id,username,head
+        from answer,user
+        where answer.user_id = user.user_id and question_id = #{questionId}
+        order by question_id
+    </select>
+
+    <select id="getAnswerPageByUserId" resultMap="getAnswer">
+        select answer_id,answer_describe,answer_time,is_accept,question.question_id,question_title
+        from answer,question
+        where answer.user_id = #{userId} and answer.question_id = question.question_id
+        limit #{start},#{size}
+    </select>
+
+</mapper>
