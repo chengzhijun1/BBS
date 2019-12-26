@@ -1,0 +1,9 @@
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (1, 1, 1, '1', '2019-12-24 16:18:52', 1);
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (2, 2, 6, '2', '2019-12-25 15:26:37', 1);
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (3, 4, 1, '3', '2019-12-24 21:38:32', 0);
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (5, 1, 6, '4', '2019-12-24 16:19:05', 1);
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (6, 4, 1, '6', '2019-12-24 16:19:10', 1);
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (7, 1, 6, '7', '2019-12-24 16:19:19', 1);
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (8, 5, 1, '8', '2019-12-24 21:38:33', 0);
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (9, 1, 1, 'xianzaihuidade', '2019-12-24 21:38:34', 0);
+INSERT INTO `answer` (`answer_id`, `question_id`, `user_id`, `answer_describe`, `answer_time`, `is_accept`) VALUES (10, 1, 2, 'xianzaihuidade', '2019-12-24 21:40:30', 0);
